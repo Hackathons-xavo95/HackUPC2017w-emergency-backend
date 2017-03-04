@@ -1,5 +1,4 @@
 var pgp      = require('pg-promise')({});
-//var database = pgp(process.env.DATABASE);
 var database = pgp(process.env.SCALINGO_POSTGRESQL_URL);
 
 function fetchDataAndReturn(func, params, response, isList) {
