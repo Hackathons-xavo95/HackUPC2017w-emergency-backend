@@ -1,4 +1,3 @@
-var db = require('../pg_db_adapter');
 var express = require('express');
 var conflicts = require('../calculate/conflicts');
 

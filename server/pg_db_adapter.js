@@ -1,5 +1,5 @@
 var pgp      = require('pg-promise')({});
-var database = pgp(process.env.DATABASE);
+var database = pgp(process.env.DATABASE_URL | process.env.DATABASE);
 
 function fetchDataAndReturn(func, params, response, isList) {
     database.func(func, params)
