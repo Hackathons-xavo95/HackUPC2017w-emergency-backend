@@ -4,9 +4,11 @@ var timeout = require('connect-timeout');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var logger = require('morgan');
+var cors = require('cors');
 
 module.exports = function(app, express) {
 
+    app.use(cors());
     // Serve static assets from the app folder. This enables things like javascript
     // and stylesheets to be loaded as expected. Analog to nginx.
     app.use("/", express.static(".."));
