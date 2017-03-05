@@ -22,6 +22,13 @@ function getIncidents(callback) {
     });
 }
 
+function getIndividualDevice(id, callback) {
+    var params = [id];
+    db.fetchList('get_device_location_by_id', params, function (device) {
+        callback(GeoJSON.parse(device, {Point: ['lat', 'lng']}));
+    });
+}
+
 /** Converts numeric degrees to radians */
 if (typeof(Number.prototype.toRad) === "undefined") {
     Number.prototype.toRad = function() {
@@ -47,8 +54,7 @@ function checkIfInside(device, incident) {
     center_x = incident.geometry.coordinates[0];
     center_y = incident.geometry.coordinates[1];
     radius = incident.properties.radius;
-    var first_operand = (x - center_x)^2 + (y - center_y)^2;
-    first_operand = degreeToMeters(x, center_x, y, center_y);
+    var first_operand = degreeToMeters(x, center_x, y, center_y);
     var second_operand = radius^2;
     if(first_operand < second_operand)
         device.properties.conflict = 1;
@@ -75,11 +81,28 @@ function getConflicts(callback) {
     });
 }
 
+
+function getIndividualConflict(id, callback) {
+    getIndividualDevice(id, function (device) {
+        getIncidents(function (incidents) {
+            var j = 1;
+            for(var i = 0; i < incidents.features.length; i++) {
+                checkIfInside(device.features[0], incidents.features[i]);
+            }
+            callback(device);
+        });
+    });
+}
+
 module.exports = {
     returnFullElements: function (callback) {
         getFullElements(callback);
     },
     returnConflicts: function (callback) {
         getConflicts(callback);
+    }
+    ,
+    returnIndividualConflict: function (id, callback) {
+        getIndividualConflict(id, callback);
     }
 };
