@@ -11,8 +11,9 @@ module.exports = function (parentRouter) {
             });
         })
 
-        .get('/get_individual_conflict', function (request, response) {
-            var id = request.query.id;
+        .post('/get_individual_conflict', function (request, response) {
+            var body = request.body;
+            var id = body['id'];
             conflicts.returnIndividualConflict(id, function (jsondata) {
                 return response.json(jsondata);
             });
